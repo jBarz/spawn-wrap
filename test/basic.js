@@ -2,6 +2,7 @@ var sw = require('../')
 var onExit = require('signal-exit')
 
 var isWindows = require('../lib/is-windows')()
+var winNoShebang = isWindows && 'no shebangs on Windows'
 var cp = require('child_process')
 var fixture = require.resolve('./fixtures/script.js')
 var fs = require('fs')
@@ -53,7 +54,7 @@ t.test('spawn execPath', function (t) {
   })
 })
 
-t.test('exec shebang', function (t) {
+t.test('exec shebang', { skip: winNoShebang }, function (t) {
   var child = cp.exec(fixture + ' xyz')
 
   var out = ''
@@ -68,7 +69,7 @@ t.test('exec shebang', function (t) {
   })
 })
 
-t.test('SIGHUP', function (t) {
+t.test('SIGHUP', { skip: winNoShebang }, function (t) {
   var child = cp.exec(fixture + ' xyz')
 
   var out = ''
@@ -88,7 +89,7 @@ t.test('SIGHUP', function (t) {
   })
 })
 
-t.test('SIGINT', function (t) {
+t.test('SIGINT', { skip: winNoShebang }, function (t) {
   var child = cp.exec(fixture + ' xyz')
 
   var out = ''
