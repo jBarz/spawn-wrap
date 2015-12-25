@@ -2,7 +2,7 @@ var sw = require('../')
 var onExit = require('signal-exit')
 
 var isWindows = require('../lib/is-windows')()
-var spawn = require('win-spawn')
+var cp = require('child_process')
 var fixture = require.resolve('./fixtures/script.js')
 var fs = require('fs')
 var path = require('path')
@@ -39,7 +39,7 @@ var expect = 'WRAP ["{{FIXTURE}}","xyz"]\n' +
   'EXIT [0,null]\n'
 
 t.test('spawn execPath', function (t) {
-  var child = spawn(process.execPath, [fixture, 'xyz'])
+  var child = cp.spawn(process.execPath, [fixture, 'xyz'])
 
   var out = ''
   child.stdout.on('data', function (c) {
@@ -54,7 +54,7 @@ t.test('spawn execPath', function (t) {
 })
 
 t.test('exec shebang', function (t) {
-  var child = spawn(fixture, ['xyz'])
+  var child = cp.exec(fixture + ' xyz')
 
   var out = ''
   child.stdout.on('data', function (c) {
@@ -68,9 +68,8 @@ t.test('exec shebang', function (t) {
   })
 })
 
-if (!isWindows)
 t.test('SIGHUP', function (t) {
-  var child = spawn(fixture, ['xyz'])
+  var child = cp.exec(fixture + ' xyz')
 
   var out = ''
   child.stdout.on('data', function (c) {
@@ -89,9 +88,8 @@ t.test('SIGHUP', function (t) {
   })
 })
 
-if (!isWindows)
 t.test('SIGINT', function (t) {
-  var child = spawn(fixture, ['xyz'])
+  var child = cp.exec(fixture + ' xyz')
 
   var out = ''
   child.stdout.on('data', function (c) {
@@ -117,7 +115,7 @@ t.test('SIGINT', function (t) {
 
 t.test('--harmony', function (t) {
   var node = process.execPath
-  var child = spawn(node, ['--harmony', fixture, 'xyz'])
+  var child = cp.spawn(node, ['--harmony', fixture, 'xyz'])
   var out = ''
   child.stdout.on('data', function (c) {
     out += c
@@ -138,7 +136,7 @@ t.test('node exe with different name', function(t) {
   var data = fs.readFileSync(process.execPath)
   fs.writeFileSync(fp, data)
   fs.chmodSync(fp, '0775')
-  var child = spawn(process.execPath, [fixture, 'xyz'])
+  var child = cp.spawn(process.execPath, [fixture, 'xyz'])
 
   var out = ''
   child.stdout.on('data', function (c) {
