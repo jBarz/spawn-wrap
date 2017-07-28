@@ -8,8 +8,8 @@ var rimraf = require('rimraf')
 var mkdirp = require('mkdirp')
 var fs = require('fs')
 
-if (process.platform === 'win32') {
-  t.plan(0, 'No proper shebang support on windows, so skip this')
+if (process.platform === 'win32' || process.platform === 'os390') {
+  t.plan(0, 'No proper shebang support on this platform, so skip this')
   process.exit(0)
 }
 
